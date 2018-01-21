@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class TemperatureMapper {
+import org.springframework.jdbc.core.RowMapper;
+
+public class TemperatureMapper implements RowMapper<Temperature> {
 
 	public Temperature mapRow(ResultSet resultSet, int rowNum) throws SQLException{
 		
