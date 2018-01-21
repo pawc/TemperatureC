@@ -1,0 +1,31 @@
+body {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: rgb(64, 83, 255);
+	background-color: #a1fcd0; 
+	text-align: center; 
+}
+
+input[type=text], select {
+    width: 120px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit], input[type=button] {
+    width: 100px;
+    background-color: #a1fcd0;
+    color: black;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover, input[type=button]:hover {
+    background-color: #a1fcd0;
+}

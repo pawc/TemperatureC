@@ -27,6 +27,14 @@ public class TemperatureController {
 	
 	
 	@RequestMapping("/")
+	public ModelAndView test(HttpServletRequest request, HttpServletResponse response){		
+		
+		ModelMap model = new ModelMap();
+		
+		return new ModelAndView("test", "model", model);
+	}
+	
+	@RequestMapping("/home")
 	public ModelAndView home(HttpServletRequest request, HttpServletResponse response){		
 		
 		ModelMap model = new ModelMap();

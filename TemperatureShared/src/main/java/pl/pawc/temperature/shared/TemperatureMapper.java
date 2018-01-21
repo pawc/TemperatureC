@@ -2,6 +2,7 @@ package pl.pawc.temperature.shared;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -15,7 +16,9 @@ public class TemperatureMapper implements RowMapper<Temperature> {
 		
 		temperature.setId(resultSet.getLong("id"));
 		GregorianCalendar calendar = new GregorianCalendar(new Locale("pl"));
-		temperature.setTimestamp((resultSet.getTimestamp("time", calendar)));
+		Timestamp timestamp = resultSet.getTimestamp("time", calendar);
+		Timestamp hourBack = new Timestamp(timestamp.getTime() - (1000 * 60 * 60));
+		temperature.setTimestamp(hourBack);
 		temperature.setTempC(resultSet.getDouble("tempC"));
 		
 		return temperature;
