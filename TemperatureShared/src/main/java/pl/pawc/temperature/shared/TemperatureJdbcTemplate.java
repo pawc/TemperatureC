@@ -28,13 +28,14 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		jdbcTemplateObject.update(SQL, tempC);
 	}
 
-	public List<Temperature> getLast10() {
+	public List<Temperature> getLatest(int intervalMinutes) {
+		int interval = intervalMinutes * 60;
 		String SQL =
 		"select id, avg(tempC) tempC, time " + 
 		"from temperatures " + 
 		"where date(time) >='2018-01-21' " + 
-		"group by UNIX_TIMESTAMP(time) DIV 300 " + 
-		"order by 1 desc limit 24;";
+		"group by UNIX_TIMESTAMP(time) DIV " + interval +
+		" order by 1 desc limit 48;";
 		
 		ArrayList<Temperature> result = new ArrayList<Temperature>();
 		result = (ArrayList<Temperature>) jdbcTemplateObject.query(SQL, new TemperatureMapper());

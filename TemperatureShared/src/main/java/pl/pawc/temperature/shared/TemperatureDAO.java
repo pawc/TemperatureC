@@ -5,6 +5,6 @@ import java.util.List;
 public interface TemperatureDAO {
 	
 	public void insert(Temperature temperature);
-	public List<Temperature> getLast10();
+	public List<Temperature> getLatest(int intervalMinutes);
 
 }

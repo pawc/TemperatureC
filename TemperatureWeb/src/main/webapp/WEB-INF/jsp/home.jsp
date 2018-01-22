@@ -34,14 +34,14 @@
 				{
 					type: "line",
 					showInLegend: true,
-					legendText: "temperature",
+					legendText: "temperatura Gdansk, Przymorze",
 					dataPoints: generatedDataPoints	
 				}
 				],
 				axisX: {
 					valueFormatString: "DDD HH:mm"
 				},
-				backgroundColor: "#a1fcd0"
+				backgroundColor: "#d0f4bc"
 			});
 			chart.render();
 			
@@ -49,13 +49,15 @@
 	
 	window.onload = doAjaxPost;
 
-	function doAjaxPost() {  
+	function doAjaxPost() { 
+		
+	var interval = $('#interval').val(); 
 	
 	$.ajax({  
 		type : "Get",   
-		url : "ajax.html",   
+		url : "get.html",   
 		dataType: "json",
-		data : "targetCurrency=ok",
+		data : "interval=" + interval,
 		
 		success : function(response) {  
 			plot(response);
@@ -69,7 +71,13 @@
 	</script>
 		
     <form method="get">  
-	<input type="button" value="update" onclick="doAjaxPost();" />  
+	<input type="button" value="Update" onclick="doAjaxPost();" /> 
+	<select name="interval" id="interval">
+		<option value="60">60 min.</option>
+		<option value="30">30 min.</option>
+		<option value="15" selected="selected">15 min.</option>
+		<option value="5">5 min.</option>
+	</select> 
     </form>
     
 	<div id="chartContainer" style="height: 400px; width: 100%;"></div>

@@ -1,7 +1,7 @@
 body {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: rgb(64, 83, 255);
-	background-color: #a1fcd0; 
+	background-color: #d0f4bc; 
 	text-align: center; 
 }
 
@@ -17,15 +17,15 @@ input[type=text], select {
 
 input[type=submit], input[type=button] {
     width: 100px;
-    background-color: #a1fcd0;
+    background-color: #d0f4bc;
     color: black;
     padding: 14px 20px;
     margin: 8px 0;
-    border: none;
+    border: 1px;
     border-radius: 4px;
     cursor: pointer;
 }
 
 input[type=submit]:hover, input[type=button]:hover {
-    background-color: #a1fcd0;
+    background-color: #d0f4bc;
 }

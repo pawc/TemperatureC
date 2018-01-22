@@ -24,17 +24,8 @@ import pl.pawc.temperature.shared.TemperatureJdbcTemplate;
 
 @Controller
 public class TemperatureController {
-	
-	
+		
 	@RequestMapping("/")
-	public ModelAndView test(HttpServletRequest request, HttpServletResponse response){		
-		
-		ModelMap model = new ModelMap();
-		
-		return new ModelAndView("test", "model", model);
-	}
-	
-	@RequestMapping("/home")
 	public ModelAndView home(HttpServletRequest request, HttpServletResponse response){		
 		
 		ModelMap model = new ModelMap();
@@ -42,17 +33,21 @@ public class TemperatureController {
 		return new ModelAndView("home", "model", model);
 	}
 	
-	@RequestMapping("/ajax")  
+	@RequestMapping("/get")  
 	public @ResponseBody  
-	String ajax(@RequestParam(value = "targetCurrency") String targetCurrency,
-			HttpServletResponse response){ 
+	String ajax(@RequestParam(value = "interval") String intervalParam,
+			HttpServletResponse response){
+		
+		if(!validateParam(intervalParam)) throw400(response);
+		
+		int interval = Integer.parseInt(intervalParam);
 	  
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
 	    TemperatureJdbcTemplate temperatureJdbcTemplate = null;
 	    
 		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
 		
-		ArrayList<Temperature> result = (ArrayList<Temperature>) temperatureJdbcTemplate.getLast10();
+		ArrayList<Temperature> result = (ArrayList<Temperature>) temperatureJdbcTemplate.getLatest(interval);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
@@ -65,6 +60,29 @@ public class TemperatureController {
 	  
 		return str;  
 	  
-	}  
+	} 
+	
+	private boolean validateParam(String intervalParam) {
+		
+		int interval;
+		
+		try {
+			interval = Integer.parseInt(intervalParam);
+		}
+		catch(NumberFormatException e) {
+			return false;
+		}
+		
+		if(interval<=0) return false;
+		return true;
+	}
+	
+	private void throw400(HttpServletResponse response){
+		try {
+			response.sendError(400, "Invalid request parameters");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
