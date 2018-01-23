@@ -17,8 +17,8 @@ public class TemperatureMapper implements RowMapper<Temperature> {
 		temperature.setId(resultSet.getLong("id"));
 		GregorianCalendar calendar = new GregorianCalendar(new Locale("pl"));
 		Timestamp timestamp = resultSet.getTimestamp("time", calendar);
-		Timestamp hourBack = new Timestamp(timestamp.getTime() - (1000 * 60 * 60));
-		temperature.setTimestamp(hourBack);
+		//Timestamp hourBack = new Timestamp(timestamp.getTime() - (1000 * 60 * 60));
+		temperature.setTimestamp(timestamp);
 		temperature.setTempC(resultSet.getDouble("tempC"));
 		
 		return temperature;

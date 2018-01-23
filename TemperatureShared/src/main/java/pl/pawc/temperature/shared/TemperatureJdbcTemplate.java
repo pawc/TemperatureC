@@ -42,4 +42,9 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		return result;
 	}
 
+	public void insert(double value) {
+		String SQL = "insert into osk (val) values (?);";
+		jdbcTemplateObject.update(SQL, value);
+	}
+
 }

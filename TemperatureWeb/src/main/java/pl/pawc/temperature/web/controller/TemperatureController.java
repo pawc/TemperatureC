@@ -33,10 +33,34 @@ public class TemperatureController {
 		return new ModelAndView("home", "model", model);
 	}
 	
+	@RequestMapping("/oskPost")  
+	public @ResponseBody  
+	void oskPost(@RequestParam(value = "value") String valueParam, HttpServletResponse response){
+		
+		double val;
+		
+		try {
+			val = Double.parseDouble(valueParam);
+		}
+		catch(NumberFormatException e) {
+			throw400(response);
+			return;
+		}
+		
+		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+	    TemperatureJdbcTemplate temperatureJdbcTemplate = null;
+	    
+		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
+		
+		temperatureJdbcTemplate.insert(val);
+		
+		response.setStatus(HttpServletResponse.SC_OK);
+	  
+	} 	
+	
 	@RequestMapping("/get")  
 	public @ResponseBody  
-	String ajax(@RequestParam(value = "interval") String intervalParam,
-			HttpServletResponse response){
+	String ajax(@RequestParam(value = "interval") String intervalParam, HttpServletResponse response){
 		
 		if(!validateParam(intervalParam)) throw400(response);
 		
@@ -79,7 +103,7 @@ public class TemperatureController {
 	
 	private void throw400(HttpServletResponse response){
 		try {
-			response.sendError(400, "Invalid request parameters");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
