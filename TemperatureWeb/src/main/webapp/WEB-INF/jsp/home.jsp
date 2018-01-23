@@ -71,8 +71,7 @@
 	</script>
 		
     <form method="get">  
-	<input type="button" value="Update" onclick="doAjaxPost();" /> 
-	<select name="interval" id="interval">
+	<select name="interval" id="interval" onClick="doAjaxPost();">
 		<option value="60">60 min.</option>
 		<option value="30">30 min.</option>
 		<option value="15" selected="selected">15 min.</option>
