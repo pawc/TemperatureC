@@ -1,6 +1,6 @@
 # TemperatureC
 
-<p> arduino (ds18b20) -> TemperatureSerial > MySQL > Temperature Web </p>
+<p> ds18b20 & NodeMcu v3 / enc28j60 > MySQL > Temperature Web </p>
 
 rxtx </br>
 windows http://jlog.org/rxtx-win.html </br>

@@ -33,14 +33,21 @@ public class TemperatureController {
 		return new ModelAndView("home", "model", model);
 	}
 	
-	@RequestMapping("/oskPost")  
+	@RequestMapping("/post")  
 	public @ResponseBody  
-	void oskPost(@RequestParam(value = "value") String valueParam, HttpServletResponse response){
+	void post(@RequestParam(value = "owner") String owner, 
+			@RequestParam(value = "temperature") String temperatureParam, 
+			HttpServletResponse response){
 		
-		double val;
+		if(!validateOwner(owner)) {
+			throw400(response);
+			return;
+		}
+		
+		double temperatureVal;
 		
 		try {
-			val = Double.parseDouble(valueParam);
+			temperatureVal = Double.parseDouble(temperatureParam);
 		}
 		catch(NumberFormatException e) {
 			throw400(response);
@@ -52,7 +59,11 @@ public class TemperatureController {
 	    
 		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
 		
-		temperatureJdbcTemplate.insert(val);
+		Temperature temperature = new Temperature();
+		temperature.setOwner(owner);
+		temperature.setTempC(temperatureVal);
+		
+		temperatureJdbcTemplate.insert(temperature);
 		
 		response.setStatus(HttpServletResponse.SC_OK);
 	  
@@ -99,6 +110,23 @@ public class TemperatureController {
 		
 		if(interval<=0) return false;
 		return true;
+	}
+	
+	private boolean validateOwner(String owner) {
+		switch (owner) {
+			case "pawc" : {
+				return true;
+			}
+			case "osk1" : {
+				return true;
+			}
+			case "osk2" : {
+				return true;
+			}
+			default : {
+				return false;
+			}
+		}
 	}
 	
 	private void throw400(HttpServletResponse response){

@@ -1,13 +1,11 @@
 package pl.pawc.temperature.shared;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class TemperatureJdbcTemplate implements TemperatureDAO{
 	
@@ -20,12 +18,13 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 	}
 
 	public void insert(Temperature temperature){
-		String SQL = "insert into temperatures (tempC)"
-				+ " values (?)";
+		String SQL = "insert into temperatures (owner, tempC)"
+				+ " values (?, ?)";
 
+		String owner = temperature.getOwner();
 		double tempC = temperature.getTempC();
 		
-		jdbcTemplateObject.update(SQL, tempC);
+		jdbcTemplateObject.update(SQL, owner, tempC);
 	}
 
 	public List<Temperature> getLatest(int intervalMinutes) {
