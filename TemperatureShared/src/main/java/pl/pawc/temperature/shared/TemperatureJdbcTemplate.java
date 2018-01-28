@@ -27,12 +27,12 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		jdbcTemplateObject.update(SQL, owner, tempC);
 	}
 
-	public List<Temperature> getLatest(int intervalMinutes) {
+	public List<Temperature> getLatest(String owner, int intervalMinutes) {
 		int interval = intervalMinutes * 60;
 		String SQL =
-		"select id, avg(tempC) tempC, time " + 
+		"select id, owner, avg(tempC) tempC, time " + 
 		"from temperatures " + 
-		"where date(time) >='2018-01-21' " + 
+		"where owner='"+owner+"' " + 
 		"group by UNIX_TIMESTAMP(time) DIV " + interval +
 		" order by 1 desc limit 48;";
 		

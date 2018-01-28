@@ -34,7 +34,7 @@
 				{
 					type: "line",
 					showInLegend: true,
-					legendText: "temperatura Gdansk, Przymorze",
+					legendText: response[1].owner,
 					dataPoints: generatedDataPoints	
 				}
 				],
@@ -51,13 +51,14 @@
 
 	function doAjaxPost() { 
 		
-	var interval = $('#interval').val(); 
+	var interval = $('#interval').val();
+	var owner = $('#owner').val();
 	
 	$.ajax({  
 		type : "Get",   
 		url : "get.html",   
 		dataType: "json",
-		data : "interval=" + interval,
+		data : "owner=" + owner +"&interval=" + interval,
 		
 		success : function(response) {  
 			plot(response);
@@ -70,13 +71,19 @@
 	}  
 	</script>
 		
-    <form method="get">  
+    <form method="get">
+   	<select name="owner" id="owner" onClick="doAjaxPost();">
+		<option value="pawc">pawc</option>
+		<option value="osk1" selected="selected">osk1</option>
+		<option value="osk2">osk2</option>
+	</select>   
 	<select name="interval" id="interval" onClick="doAjaxPost();">
 		<option value="60">60 min.</option>
 		<option value="30">30 min.</option>
 		<option value="15" selected="selected">15 min.</option>
 		<option value="5">5 min.</option>
 	</select> 
+	
     </form>
     
 	<div id="chartContainer" style="height: 400px; width: 100%;"></div>

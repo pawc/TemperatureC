@@ -71,7 +71,14 @@ public class TemperatureController {
 	
 	@RequestMapping("/get")  
 	public @ResponseBody  
-	String ajax(@RequestParam(value = "interval") String intervalParam, HttpServletResponse response){
+	String get(
+			@RequestParam(value = "owner") String owner,
+			@RequestParam(value = "interval") String intervalParam, 
+			HttpServletResponse response){
+		
+		if(!validateOwner(owner)) {
+			throw400(response);
+		}
 		
 		if(!validateParam(intervalParam)) throw400(response);
 		
@@ -82,7 +89,7 @@ public class TemperatureController {
 	    
 		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
 		
-		ArrayList<Temperature> result = (ArrayList<Temperature>) temperatureJdbcTemplate.getLatest(interval);
+		ArrayList<Temperature> result = (ArrayList<Temperature>) temperatureJdbcTemplate.getLatest(owner, interval);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
