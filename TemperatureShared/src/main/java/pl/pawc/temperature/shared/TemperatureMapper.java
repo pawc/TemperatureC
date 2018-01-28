@@ -3,6 +3,7 @@ package pl.pawc.temperature.shared;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -20,7 +21,10 @@ public class TemperatureMapper implements RowMapper<Temperature> {
 		Timestamp timestamp = resultSet.getTimestamp("time", calendar);
 		//Timestamp hourBack = new Timestamp(timestamp.getTime() - (1000 * 60 * 60));
 		temperature.setTimestamp(timestamp);
-		temperature.setTempC(resultSet.getDouble("tempC"));
+		
+		//DecimalFormat df = new DecimalFormat("#.###");
+        //String d = df.format(resultSet.getDouble("tempC"));
+        temperature.setTempC(resultSet.getDouble("tempC"));
 		
 		return temperature;
 		

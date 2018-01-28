@@ -4,21 +4,13 @@ var max;
 
 function plot(response){	
 	
-/*	if(chart != null){
-		if(choice){
-			clearChart();
-		}
-		updateChart(response);
-		return;
-	}*/
-	
 	generatedDataPoints = [];
-	len = response.temperature.length;
+	len = response.length;
 	
 	for(var i = 0; i < len; i++){
 		generatedDataPoints.push({
-			y : response.temperature[i].tempC,
-			x : new Date(response.temperature[i].timestamp)
+			y : response[i].tempC,
+			x : new Date(response[i].timestamp)
 		})
 		
 	}
@@ -28,15 +20,14 @@ function plot(response){
 		{
 			type: "line",
 			showInLegend: true,
-			legendText: "temperature",
+			legendText: response[1].owner,
 			dataPoints: generatedDataPoints	
 		}
 		],
-		axisY:{
-	    	minimum: -10,
-	    	maximum: +10,
-		 },
-		backgroundColor: "#EEEEEC"
+		axisX: {
+			valueFormatString: "DDD HH:mm"
+		},
+		backgroundColor: "#d0f4bc"
 	});
 	chart.render();
 	
@@ -45,12 +36,12 @@ function plot(response){
 function updateChart(response){
 	
 	generatedDataPoints = [];
-	len = response.rateDate.length;
+	len = response.length;
 	
 	for(var i = 0; i < len; i++){
 		generatedDataPoints.push({
-			y : response.rateDate[i].exchangeRate,
-			x : new Date(response.rateDate[i].date)
+			y : response[i].tempC,
+			x : new Date(response[i].timestamp)
 		})
 		
 	}
@@ -58,12 +49,11 @@ function updateChart(response){
     var newSeries = {
 		type: "line",
 		showInLegend: true,
-		legendText: response.targetCurrency+"/"+response.baseCurrency,
+		legendText: response[1].owner,
 		dataPoints: generatedDataPoints
     };
     
 	chart.options.data.push(newSeries);
-	updateMinMax(response);
 	chart.render();
 }
 
@@ -85,7 +75,5 @@ function clearChart(){
 	for(var i=chart.data.length-1; i >= 0; i--){
 		chart.data[i].remove();
 	}
-	min = Number.POSITIVE_INFINITY;
-	max = Number.NEGATIVE_INFINITY;
 	chart.render();
 }
