@@ -5,27 +5,39 @@ var max;
 function plot(response){	
 	
 	generatedDataPoints = [];
-	len = response.length;
+	len = response.results.length;
 	
 	for(var i = 0; i < len; i++){
 		generatedDataPoints.push({
-			y : response[i].tempC,
-			x : new Date(response[i].timestamp)
+			y : response.results[i].tempC,
+			x : new Date(response.results[i].timestamp)
 		})
 		
 	}
+	
+	min = response.min;
+	max = response.max;
+	span = max - min;
+	if(span == 0) span = 1;
+	min = min-0.1*span;
+	max = max+0.1*span;
+
 		 
 	chart = new CanvasJS.Chart("chartContainer", {
 		data: [              
 		{
 			type: "line",
 			showInLegend: true,
-			legendText: response[1].owner,
+			legendText: response.owner,
 			dataPoints: generatedDataPoints	
 		}
 		],
 		axisX: {
 			valueFormatString: "DDD HH:mm"
+		},
+		axisY: {
+			minimum: min,
+			maximum: max
 		},
 		backgroundColor: "#d0f4bc"
 	});
@@ -36,12 +48,12 @@ function plot(response){
 function updateChart(response){
 	
 	generatedDataPoints = [];
-	len = response.length;
+	len = response.results.length;
 	
 	for(var i = 0; i < len; i++){
 		generatedDataPoints.push({
-			y : response[i].tempC,
-			x : new Date(response[i].timestamp)
+			y : response.results[i].tempC,
+			x : new Date(response.results[i].timestamp)
 		})
 		
 	}
@@ -49,11 +61,12 @@ function updateChart(response){
     var newSeries = {
 		type: "line",
 		showInLegend: true,
-		legendText: response[1].owner,
+		legendText: response.owner,
 		dataPoints: generatedDataPoints
     };
     
 	chart.options.data.push(newSeries);
+	updateMinMax(response);
 	chart.render();
 }
 
@@ -75,5 +88,7 @@ function clearChart(){
 	for(var i=chart.data.length-1; i >= 0; i--){
 		chart.data[i].remove();
 	}
+	min = Number.POSITIVE_INFINITY;
+	max = Number.NEGATIVE_INFINITY;
 	chart.render();
 }

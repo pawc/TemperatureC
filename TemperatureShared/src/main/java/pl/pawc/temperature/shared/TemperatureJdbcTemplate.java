@@ -1,11 +1,15 @@
 package pl.pawc.temperature.shared;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import pl.pawc.temperature.shared.mapper.TemperatureTimestampMapper;
+import pl.pawc.temperature.shared.model.Temperature;
+import pl.pawc.temperature.shared.model.TemperatureResponse;
+import pl.pawc.temperature.shared.model.TemperatureTimestamp;
 
 public class TemperatureJdbcTemplate implements TemperatureDAO{
 	
@@ -26,19 +30,23 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		
 		jdbcTemplateObject.update(SQL, owner, tempC);
 	}
-
-	public List<Temperature> getLatest(String owner, int intervalMinutes) {
+	
+	public TemperatureResponse getLatest(String owner, int intervalMinutes) {
 		int interval = intervalMinutes * 60;
+		
 		String SQL =
-		"select id, owner, avg(tempC) tempC, time " + 
+		"select avg(tempC) tempC, time " + 
 		"from temperatures " + 
 		"where owner='"+owner+"' " + 
 		"group by UNIX_TIMESTAMP(time) DIV " + interval +
-		" order by 1 desc limit 48;";
+		" order by 2 desc limit 48;";
 		
-		ArrayList<Temperature> result = new ArrayList<Temperature>();
-		result = (ArrayList<Temperature>) jdbcTemplateObject.query(SQL, new TemperatureMapper());
-		return result;
+		ArrayList<TemperatureTimestamp> result = new ArrayList<TemperatureTimestamp>();
+		result = (ArrayList<TemperatureTimestamp>) jdbcTemplateObject.query(SQL, new TemperatureTimestampMapper());
+		
+		TemperatureResponse temperatureResponse = new TemperatureResponse(owner, result);
+		
+		return temperatureResponse;
 	}
 
 	public void insert(double value) {

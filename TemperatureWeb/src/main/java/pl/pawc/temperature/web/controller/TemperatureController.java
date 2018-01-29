@@ -19,8 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import pl.pawc.temperature.shared.Temperature;
 import pl.pawc.temperature.shared.TemperatureJdbcTemplate;
+import pl.pawc.temperature.shared.model.Temperature;
+import pl.pawc.temperature.shared.model.TemperatureResponse;
 
 @Controller
 public class TemperatureController {
@@ -89,7 +90,7 @@ public class TemperatureController {
 	    
 		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
 		
-		ArrayList<Temperature> result = (ArrayList<Temperature>) temperatureJdbcTemplate.getLatest(owner, interval);
+		TemperatureResponse result = (TemperatureResponse) temperatureJdbcTemplate.getLatest(owner, interval);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		

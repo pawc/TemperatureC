@@ -1,4 +1,4 @@
-package pl.pawc.temperature.shared;
+package pl.pawc.temperature.shared.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +8,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.springframework.jdbc.core.RowMapper;
+
+import pl.pawc.temperature.shared.model.Temperature;
 
 public class TemperatureMapper implements RowMapper<Temperature> {
 

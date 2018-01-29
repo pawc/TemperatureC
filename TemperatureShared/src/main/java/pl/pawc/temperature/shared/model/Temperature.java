@@ -1,7 +1,6 @@
-package pl.pawc.temperature.shared;
+package pl.pawc.temperature.shared.model;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class Temperature {
 	

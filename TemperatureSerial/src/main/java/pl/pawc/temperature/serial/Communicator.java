@@ -1,8 +1,8 @@
 package pl.pawc.temperature.serial;
 
 import gnu.io.*;
-import pl.pawc.temperature.shared.Temperature;
 import pl.pawc.temperature.shared.TemperatureJdbcTemplate;
+import pl.pawc.temperature.shared.model.Temperature;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,10 +1,11 @@
 package pl.pawc.temperature.shared;
 
-import java.util.List;
+import pl.pawc.temperature.shared.model.Temperature;
+import pl.pawc.temperature.shared.model.TemperatureResponse;
 
 public interface TemperatureDAO {
 	
 	public void insert(Temperature temperature);
-	public List<Temperature> getLatest(String owner, int intervalMinutes);
+	public TemperatureResponse getLatest(String owner, int intervalMinutes);
 
 }
