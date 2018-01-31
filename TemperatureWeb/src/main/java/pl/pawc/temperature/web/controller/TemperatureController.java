@@ -64,7 +64,58 @@ public class TemperatureController {
 		temperature.setOwner(owner);
 		temperature.setTempC(temperatureVal);
 		
-		temperatureJdbcTemplate.insert(temperature);
+		temperatureJdbcTemplate.insert(temperature, "temperatures");
+		
+		response.setStatus(HttpServletResponse.SC_OK);
+	  
+	}
+	
+	@RequestMapping("/bme280")  
+	public @ResponseBody  
+	void bme280(@RequestParam(value = "owner") String owner, 
+			@RequestParam(value = "temperature") String temperatureParam, 
+			@RequestParam(value = "humidity") String humidityParam,
+			@RequestParam(value = "pressure") String pressureParam,
+			HttpServletResponse response){
+		
+		if(!validateOwner(owner)) {
+			throw400(response);
+			return;
+		}
+		
+		double temperatureVal;
+		double humidityVal;
+		double pressureVal;
+		
+		try {
+			temperatureVal = Double.parseDouble(temperatureParam);
+			humidityVal = Double.parseDouble(humidityParam);
+			pressureVal = Double.parseDouble(pressureParam);
+		}
+		catch(NumberFormatException e) {
+			throw400(response);
+			return;
+		}
+		
+		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+	    TemperatureJdbcTemplate temperatureJdbcTemplate = null;
+	    
+		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
+		
+		Temperature temperature = new Temperature();
+		temperature.setOwner(owner);
+		temperature.setTempC(temperatureVal);
+		temperatureJdbcTemplate.insert(temperature, "temperatures");
+		
+		Temperature humidity = new Temperature();
+		temperature.setOwner(owner);
+		temperature.setTempC(humidityVal);
+		temperatureJdbcTemplate.insert(temperature, "humidity");
+		
+		Temperature pressure = new Temperature();
+		temperature.setOwner(owner);
+		temperature.setTempC(pressureVal);
+		temperatureJdbcTemplate.insert(temperature, "pressure");
 		
 		response.setStatus(HttpServletResponse.SC_OK);
 	  
@@ -129,6 +180,9 @@ public class TemperatureController {
 				return true;
 			}
 			case "osk2" : {
+				return true;
+			}
+			case "osk3" : {
 				return true;
 			}
 			default : {

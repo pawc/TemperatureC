@@ -21,8 +21,8 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		this.jdbcTemplateObject = new JdbcTemplate(dataSource);
 	}
 
-	public void insert(Temperature temperature){
-		String SQL = "insert into temperatures (owner, tempC)"
+	public void insert(Temperature temperature, String table){
+		String SQL = "insert into " + table +" (owner, "+getColumnName(table) +")"
 				+ " values (?, ?)";
 
 		String owner = temperature.getOwner();
@@ -31,6 +31,15 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		jdbcTemplateObject.update(SQL, owner, tempC);
 	}
 	
+	private String getColumnName(String table) {
+		switch(table) {
+			case "temperatures" : return "tempC";
+			case "humidity" : return "hum";
+			case "pressure" : return "press";
+			default : return null;
+		}
+	}
+
 	public TemperatureResponse getLatest(String owner, int intervalMinutes) {
 		int interval = intervalMinutes * 60;
 		

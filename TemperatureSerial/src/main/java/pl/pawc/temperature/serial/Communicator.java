@@ -60,7 +60,7 @@ public class Communicator implements SerialPortEventListener{
                     
                     System.out.println(temperature.toString());
                     
-                    temperatureJdbcTemplate.insert(temperature);
+                    temperatureJdbcTemplate.insert(temperature, "temperatures");
                 }
             }
             catch (Exception e){
