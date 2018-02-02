@@ -1,5 +1,0 @@
-<html>
-<body>
-<h2>Test page</h2>
-</body>
-</html>
