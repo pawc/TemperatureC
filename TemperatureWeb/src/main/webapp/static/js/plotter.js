@@ -24,22 +24,21 @@ function plot(response){
 		
 	}
 	
-	minPrimary = response.min;
+	/*minPrimary = response.min;
 	maxPrimary = response.max;
 	span = maxPrimary - minPrimary;
 	if(span == 0) span = 1;
 	minPrimary = minPrimary-0.1*span;
-	maxPrimary = maxPrimary+0.1*span;
+	maxPrimary = maxPrimary+0.1*span;*/
 
-		 
 	chart = new CanvasJS.Chart("chartContainer", {
 		axisX: {
 			valueFormatString: "DDD HH:mm"
 		},
 		axisY: {
 			title : "temperature C",
-			minimum: minPrimary,
-			maximum: maxPrimary
+			//minimum: minPrimary,
+			//maximum: maxPrimary
 		},
 		axisY2: {
 			title : "humidity",
@@ -49,7 +48,7 @@ function plot(response){
 			{
 				type: "line",
 				showInLegend: true,
-				legendText: response.owner,
+				legendText: response.owner+"-"+response.type,
 				dataPoints: generatedDataPoints
 			},
 			{
@@ -80,14 +79,25 @@ function updateChart(response){
     var newSeries = {
 		type: "line",
 		showInLegend: true,
-		axisYType: "secondary",
-		legendText: response.owner,
+		axisYType: getYType(response.type),
+		legendText: response.owner+"-"+response.type,
 		dataPoints: generatedDataPoints
-    };
+    };   
     
 	chart.options.data.push(newSeries);
 	//updateMinMaxPrimary(response);
 	chart.render();
+}
+
+function getYType(type){
+	if(type == "pressure" || type == "humidity") {
+		console.log("humidity or pressure");
+		return "secondary";
+	}
+	else{
+		console.log("temperatura");
+		return "primary";
+	}
 }
 
 function updateMinMaxPrimary(response){

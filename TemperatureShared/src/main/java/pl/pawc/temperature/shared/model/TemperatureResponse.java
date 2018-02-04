@@ -5,12 +5,14 @@ import java.util.Comparator;
 
 public class TemperatureResponse {
 	
+	private String type;
 	private String owner;
 	private double min;
 	private double max;
 	private ArrayList<TemperatureTimestamp> result;
 	
-	public TemperatureResponse(String owner, ArrayList<TemperatureTimestamp> result) {
+	public TemperatureResponse(String type, String owner, ArrayList<TemperatureTimestamp> result) {
+		this.type = type;
 		this.owner = owner;
 		this.result = result;
 		result.sort(new Comparator<TemperatureTimestamp>() {
@@ -29,8 +31,11 @@ public class TemperatureResponse {
 				return o1.getTimestamp().compareTo(o2.getTimestamp());
 			}
 			
-		});
-		
+		});	
+	}
+	
+	public String getType() {
+		return type;
 	}
 	
 	public String getOwner() {
@@ -45,6 +50,11 @@ public class TemperatureResponse {
 	public ArrayList<TemperatureTimestamp> getResults() {
 		return result;
 	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}

@@ -44,7 +44,7 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		ArrayList<TemperatureTimestamp> result = new ArrayList<TemperatureTimestamp>();
 		result = (ArrayList<TemperatureTimestamp>) jdbcTemplateObject.query(SQL, new TemperatureTimestampMapper());
 		
-		TemperatureResponse temperatureResponse = new TemperatureResponse(owner, result);
+		TemperatureResponse temperatureResponse = new TemperatureResponse(table, owner, result);
 		
 		return temperatureResponse;
 	}
