@@ -1,6 +1,13 @@
 var chart;
-var minPrimary;
-var maxPrimary;
+
+var minTemperature = Number.POSITIVE_INFINITY;
+var maxTemperature = Number.NEGATIVE_INFINITY;
+
+var minHumidity = Number.POSITIVE_INFINITY;
+var maxHumidity = Number.NEGATIVE_INFINITY;
+
+var minPressure = Number.POSITIVE_INFINITY;
+var maxPressure = Number.NEGATIVE_INFINITY;
 
 function plot(response){	
 	
@@ -24,26 +31,28 @@ function plot(response){
 		
 	}
 	
-	/*minPrimary = response.min;
-	maxPrimary = response.max;
-	span = maxPrimary - minPrimary;
+	var minLocal = response.min;
+	var maxLocal = response.max;
+	
+	if(minTemperature > minLocal) minTemperature = minLocal;
+	if(maxTemperature < maxLocal) maxTemperature = maxLocal;
+	
+	var span = maxTemperature - minTemperature;
 	if(span == 0) span = 1;
-	minPrimary = minPrimary-0.1*span;
-	maxPrimary = maxPrimary+0.1*span;*/
-
+	
 	chart = new CanvasJS.Chart("chartContainer", {
 		axisX: {
 			valueFormatString: "DDD HH:mm"
 		},
 		axisY: {
-			title : "temperature C",
-			//minimum: minPrimary,
-			//maximum: maxPrimary
+			title : "temperature [C]",
+			minimum: minTemperature,
+			maximum: maxTemperature,
 		},
 		axisY2: [{
-			title : "humidity",
+			title : "humidity [%]",
 		},
-		{	title : "pressure",		
+		{	title : "pressure [hPa]",		
 		}],
 		backgroundColor: "#d0f4bc",
 		data: [{
@@ -95,7 +104,7 @@ function updateChart(response){
     };   
     
 	chart.options.data.push(newSeries);
-	//updateMinMaxPrimary(response);
+	updateMinMax(response);
 	chart.render();
 }
 
@@ -117,25 +126,65 @@ function getYIndex(type){
 	}
 }
 
-function updateMinMaxPrimary(response){
-	minTemp = response.min;
-	maxTemp = response.max;
+function updateMinMax(response){
 	
-	if(minPrimary > minTemp) minPrimary = minTemp;
-	if(maxPrimary < maxTemp) maxPrimary = maxTemp;
+	var minLocal;
+	var maxLocal;
+	var span;
+	
+	if(response.type == "temperature"){
+		minLocal = response.min;
+		maxLocal = response.max;
 		
-	span = maxPrimary - minPrimary;
-	if(span == 0) span = 1;
+		if(minTemperature > minLocal) minTemperature = minLocal;
+		if(maxTemperature < maxLocal) maxTemperature = maxLocal;
+		
+		span = maxTemperature - minTemperature;
+		if(span == 0) span = 1;
+		
+		chart.options.axisY.minimum = minTemperature - span * 0.1;
+		chart.options.axisY.maximum = maxTemperature + span * 0.1;
+	}
 	
-	chart.options.axisY.minimum = minPrimary - span * 0.1;
-	chart.options.axisY.maximum = maxPrimary + span * 0.1;
+	if(response.type == "humidity"){
+		minLocal = response.min;
+		maxLocal = response.max;
+		
+		if(minHumidity > minLocal) minHumidity = minLocal;
+		if(maxHumidity < maxLocal) maxHumidity = maxLocal;
+		
+		span = maxHumidity - minHumidity;
+		if(span == 0) span = 1;
+		
+		chart.options.axisY2[0].minimum = minHumidity - span * 0.1;
+		chart.options.axisY2[0].maximum = maxHumidity + span * 0.1;
+	}
+	
+	if(response.type == "pressure"){
+		minLocal = response.min;
+		maxLocal = response.max;
+		
+		if(minPressure > minLocal) minPressure = minLocal;
+		if(maxPressure < maxLocal) maxPressure = maxLocal;
+		
+		span = maxPressure - minPressure;
+		if(span == 0) span = 1;
+		
+		chart.options.axisY2[1].minimum = minPressure - span * 0.1;
+		chart.options.axisY2[1].maximum = maxPressure + span * 0.1;
+	}
+	
 }
 
 function clearChart(){
 	for(var i=chart.data.length-1; i >= 0; i--){
 		chart.data[i].remove();
 	}
-	min = Number.POSITIVE_INFINITY;
-	max = Number.NEGATIVE_INFINITY;
+	minTemperature = Number.POSITIVE_INFINITY;
+	maxTemperature = Number.NEGATIVE_INFINITY;
+	minHumidity = Number.POSITIVE_INFINITY;
+	maxHumidity = Number.NEGATIVE_INFINITY;
+	minPressure = Number.POSITIVE_INFINITY;
+	maxPressure = Number.NEGATIVE_INFINITY;
 	chart.render();
 }

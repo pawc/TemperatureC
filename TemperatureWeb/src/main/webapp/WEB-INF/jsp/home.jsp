@@ -75,7 +75,7 @@
 	<input type="button" class="button button1" value="clear" onclick="clearChart();" />  
     </form>
     
-	<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+	<div id="chartContainer" style="height: 600px; width: 100%;"></div>
   
 	</center>  
 </body>  
