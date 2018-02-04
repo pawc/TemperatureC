@@ -6,6 +6,6 @@ import pl.pawc.temperature.shared.model.TemperatureResponse;
 public interface TemperatureDAO {
 	
 	public void insert(Temperature temperature, String table);
-	public TemperatureResponse getLatest(String owner, int intervalMinutes);
+	public TemperatureResponse getLatest(String owner, int intervalMinutes, String table);
 
 }

@@ -126,13 +126,16 @@ public class TemperatureController {
 	String get(
 			@RequestParam(value = "owner") String owner,
 			@RequestParam(value = "interval") String intervalParam, 
+			@RequestParam(value = "type") String type,
 			HttpServletResponse response){
 		
 		if(!validateOwner(owner)) {
 			throw400(response);
 		}
 		
-		if(!validateParam(intervalParam)) throw400(response);
+		if(!validateInterval(intervalParam)) throw400(response);
+		
+		if(!validateType(type)) throw400(response);
 		
 		int interval = Integer.parseInt(intervalParam);
 	  
@@ -141,7 +144,7 @@ public class TemperatureController {
 	    
 		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
 		
-		TemperatureResponse result = (TemperatureResponse) temperatureJdbcTemplate.getLatest(owner, interval);
+		TemperatureResponse result = (TemperatureResponse) temperatureJdbcTemplate.getLatest(owner, interval, type);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
@@ -155,21 +158,6 @@ public class TemperatureController {
 		return str;  
 	  
 	} 
-	
-	private boolean validateParam(String intervalParam) {
-		
-		int interval;
-		
-		try {
-			interval = Integer.parseInt(intervalParam);
-		}
-		catch(NumberFormatException e) {
-			return false;
-		}
-		
-		if(interval<=0) return false;
-		return true;
-	}
 	
 	private boolean validateOwner(String owner) {
 		switch (owner) {
@@ -189,6 +177,37 @@ public class TemperatureController {
 				return false;
 			}
 		}
+	}
+	
+	private boolean validateInterval(String intervalParam) {
+		
+		int interval;
+		
+		try {
+			interval = Integer.parseInt(intervalParam);
+		}
+		catch(NumberFormatException e) {
+			return false;
+		}
+		
+		if(interval<=0) return false;
+		return true;
+	}
+		
+	private boolean validateType(String type) {
+		switch(type) {
+			case "temperature" : {
+				return true;
+			}
+			case "humidity" : {
+				return true;
+			}
+			case "pressure" : {
+				return true;
+			}
+			default : return false;
+		}
+		
 	}
 	
 	private void throw400(HttpServletResponse response){

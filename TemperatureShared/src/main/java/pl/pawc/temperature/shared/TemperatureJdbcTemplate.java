@@ -22,7 +22,7 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 	}
 
 	public void insert(Temperature temperature, String table){
-		String SQL = "insert into " + table +" (owner, "+getColumnName(table) +")"
+		String SQL = "insert into " + table +" (owner, tempC)"
 				+ " values (?, ?)";
 
 		String owner = temperature.getOwner();
@@ -40,13 +40,13 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		}
 	}
 
-	public TemperatureResponse getLatest(String owner, int intervalMinutes) {
+	public TemperatureResponse getLatest(String owner, int intervalMinutes, String table) {
 		int interval = intervalMinutes * 60;
 		
 		String SQL =
 		"select avg(tempC) tempC, time " + 
-		"from temperatures " + 
-		"where owner='"+owner+"' " + 
+		"from "+ getColumnName(table) + 
+		" where owner='"+owner+"' " + 
 		"group by UNIX_TIMESTAMP(time) DIV " + interval +
 		" order by 2 desc limit 48;";
 		
@@ -56,11 +56,6 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		TemperatureResponse temperatureResponse = new TemperatureResponse(owner, result);
 		
 		return temperatureResponse;
-	}
-
-	public void insert(double value) {
-		String SQL = "insert into osk (val) values (?);";
-		jdbcTemplateObject.update(SQL, value);
 	}
 
 }
