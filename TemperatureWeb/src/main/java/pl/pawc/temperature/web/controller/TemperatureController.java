@@ -64,7 +64,7 @@ public class TemperatureController {
 		temperature.setOwner(owner);
 		temperature.setTempC(temperatureVal);
 		
-		temperatureJdbcTemplate.insert(temperature, "temperatures");
+		temperatureJdbcTemplate.insert(temperature, "temperature");
 		
 		response.setStatus(HttpServletResponse.SC_OK);
 	  
@@ -105,7 +105,7 @@ public class TemperatureController {
 		Temperature temperature = new Temperature();
 		temperature.setOwner(owner);
 		temperature.setTempC(temperatureVal);
-		temperatureJdbcTemplate.insert(temperature, "temperatures");
+		temperatureJdbcTemplate.insert(temperature, "temperature");
 		
 		Temperature humidity = new Temperature();
 		temperature.setOwner(owner);
@@ -144,7 +144,14 @@ public class TemperatureController {
 	    
 		temperatureJdbcTemplate = (TemperatureJdbcTemplate) context.getBean("temperatureJdbcTemplate");
 		
-		TemperatureResponse result = (TemperatureResponse) temperatureJdbcTemplate.getLatest(owner, interval, type);
+		TemperatureResponse result = null;
+		
+		try {
+			result = (TemperatureResponse) temperatureJdbcTemplate.getLatest(owner, interval, type);
+		}
+		catch(IndexOutOfBoundsException e) {
+			throw400(response);
+		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		

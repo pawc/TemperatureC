@@ -17,35 +17,34 @@
 	<center>
 	<script type="text/javascript"> 
 	
-	window.onload = initialize();
+	window.onload = draw(true);
 	
-	function initialize(){
-		draw('osk1', '15', true);
-		//setTimeout(draw('pawc', '15', false), 2000);
-	}
-	
-	function draw(owner, interval, init){
+	function draw(init){
 		
-		if(!init){
+		if(init){
+			owner = 'osk3';
+			interval = '15';
+			type = 'temperature';
+		}
+		else{
 			owner = $('#owner').val();
 			interval = $('#interval').val();
+			type = $('#type').val();
 		}
 
 		$.ajax({  
 			type : "Get",   
 			url : "get.html",   
 			dataType: "json",
-			data : "owner=" + owner +"&interval=" + interval,
-			
+			data : "owner=" + owner +"&interval=" + interval +"&type=" + type,
 			success : function(response) {  
 				if(init) {
-					plot(response)
+					plot(response);
 				}
 				else {
-					updateChart(response)
+					updateChart(response);
 				}
-			}, 
-				
+			}, 	
 			error : function(e) {  
 				console.log(e);   
 			}  
@@ -55,11 +54,16 @@
 	</script>
 		
     <form method="get">
+    <select name="type" id="type">
+		<option value="temperature" selected="selected">temperature</option>
+		<option value="humidity">humidity</option>
+		<option value="pressure">pressure</option>
+	</select>  
    	<select name="owner" id="owner">
 		<option value="pawc">pawc</option>
-		<option value="osk1" selected="selected">osk1</option>
+		<option value="osk1">osk1</option>
 		<option value="osk2">osk2</option>
-		<option value="osk3">osk3</option>
+		<option value="osk3" selected="selected">osk3</option>
 	</select>   
 	<select name="interval" id="interval">
 		<option value="60">60 min.</option>
@@ -67,7 +71,7 @@
 		<option value="15" selected="selected">15 min.</option>
 		<option value="5">5 min.</option>
 	</select> 
-	<input type="button" class="button button1" value="add" onclick="draw('foo', 'bar', false)" />  
+	<input type="button" class="button button1" value="add" onclick="draw(false)" />  
 	<input type="button" class="button button1" value="clear" onclick="clearChart();" />  
     </form>
     

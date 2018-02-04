@@ -30,22 +30,13 @@ public class TemperatureJdbcTemplate implements TemperatureDAO{
 		
 		jdbcTemplateObject.update(SQL, owner, tempC);
 	}
-	
-	private String getColumnName(String table) {
-		switch(table) {
-			case "temperatures" : return "tempC";
-			case "humidity" : return "hum";
-			case "pressure" : return "press";
-			default : return null;
-		}
-	}
 
 	public TemperatureResponse getLatest(String owner, int intervalMinutes, String table) {
 		int interval = intervalMinutes * 60;
 		
 		String SQL =
 		"select avg(tempC) tempC, time " + 
-		"from "+ getColumnName(table) + 
+		"from "+ table + 
 		" where owner='"+owner+"' " + 
 		"group by UNIX_TIMESTAMP(time) DIV " + interval +
 		" order by 2 desc limit 48;";
