@@ -1,10 +1,11 @@
 var chart;
-var min;
-var max;
+var minPrimary;
+var maxPrimary;
 
 function plot(response){	
 	
 	generatedDataPoints = [];
+	generatedDataPointsNull = [];
 	len = response.results.length;
 	
 	for(var i = 0; i < len; i++){
@@ -15,31 +16,49 @@ function plot(response){
 		
 	}
 	
-	min = response.min;
-	max = response.max;
-	span = max - min;
+	for(var i = 0; i < len; i++){
+		generatedDataPointsNull.push({
+			y : null,
+			x : new Date(response.results[i].timestamp)
+		})
+		
+	}
+	
+	minPrimary = response.min;
+	maxPrimary = response.max;
+	span = maxPrimary - minPrimary;
 	if(span == 0) span = 1;
-	min = min-0.1*span;
-	max = max+0.1*span;
+	minPrimary = minPrimary-0.1*span;
+	maxPrimary = maxPrimary+0.1*span;
 
 		 
 	chart = new CanvasJS.Chart("chartContainer", {
-		data: [              
-		{
-			type: "line",
-			showInLegend: true,
-			legendText: response.owner,
-			dataPoints: generatedDataPoints	
-		}
-		],
 		axisX: {
 			valueFormatString: "DDD HH:mm"
 		},
 		axisY: {
-			minimum: min,
-			maximum: max
+			title : "temperature C",
+			minimum: minPrimary,
+			maximum: maxPrimary
 		},
-		backgroundColor: "#d0f4bc"
+		axisY2: {
+			title : "humidity",
+		},
+		backgroundColor: "#d0f4bc",
+		data: [              
+			{
+				type: "line",
+				showInLegend: true,
+				legendText: response.owner,
+				dataPoints: generatedDataPoints
+			},
+			{
+				type: "line",
+				showInLegend: false,
+				axisYType: "secondary",
+				legendText: "humidity",
+				dataPoints: generatedDataPointsNull
+			}],
 	});
 	chart.render();
 	
@@ -61,27 +80,28 @@ function updateChart(response){
     var newSeries = {
 		type: "line",
 		showInLegend: true,
+		axisYType: "secondary",
 		legendText: response.owner,
 		dataPoints: generatedDataPoints
     };
     
 	chart.options.data.push(newSeries);
-	updateMinMax(response);
+	//updateMinMaxPrimary(response);
 	chart.render();
 }
 
-function updateMinMax(response){
+function updateMinMaxPrimary(response){
 	minTemp = response.min;
 	maxTemp = response.max;
 	
-	if(min > minTemp) min = minTemp;
-	if(max < maxTemp) max = maxTemp;
+	if(minPrimary > minTemp) minPrimary = minTemp;
+	if(maxPrimary < maxTemp) maxPrimary = maxTemp;
 		
-	span = max - min;
+	span = maxPrimary - minPrimary;
 	if(span == 0) span = 1;
 	
-	chart.options.axisY.minimum = min - span * 0.1;
-	chart.options.axisY.maximum = max + span * 0.1;
+	chart.options.axisY.minimum = minPrimary - span * 0.1;
+	chart.options.axisY.maximum = maxPrimary + span * 0.1;
 }
 
 function clearChart(){
