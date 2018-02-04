@@ -40,12 +40,13 @@ function plot(response){
 			//minimum: minPrimary,
 			//maximum: maxPrimary
 		},
-		axisY2: {
+		axisY2: [{
 			title : "humidity",
 		},
+		{	title : "pressure",		
+		}],
 		backgroundColor: "#d0f4bc",
-		data: [              
-			{
+		data: [{
 				type: "line",
 				showInLegend: true,
 				legendText: response.owner+"-"+response.type,
@@ -56,6 +57,14 @@ function plot(response){
 				showInLegend: false,
 				axisYType: "secondary",
 				legendText: "humidity",
+				dataPoints: generatedDataPointsNull
+			},
+			{
+				type: "line",
+				showInLegend: false,
+				axisYType: "secondary",
+				axisYIndex: 1,
+				legendText: "pressure",
 				dataPoints: generatedDataPointsNull
 			}],
 	});
@@ -80,6 +89,7 @@ function updateChart(response){
 		type: "line",
 		showInLegend: true,
 		axisYType: getYType(response.type),
+		axisYIndex: getYIndex(response.type),
 		legendText: response.owner+"-"+response.type,
 		dataPoints: generatedDataPoints
     };   
@@ -91,12 +101,19 @@ function updateChart(response){
 
 function getYType(type){
 	if(type == "pressure" || type == "humidity") {
-		console.log("humidity or pressure");
 		return "secondary";
 	}
 	else{
-		console.log("temperatura");
 		return "primary";
+	}
+}
+
+function getYIndex(type){
+	if(type == "temperature" || type == "humidity") {
+		return 0;
+	}
+	else{
+		return 1;
 	}
 }
 
