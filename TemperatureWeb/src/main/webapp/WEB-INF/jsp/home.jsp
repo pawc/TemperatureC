@@ -17,33 +17,67 @@
 	<center>
 	<script type="text/javascript"> 
 	
-	window.onload = draw(true);
+	window.onload = initialDraw();
 	
-	function draw(init){
-		
-		if(init){
-			owner = 'osk3';
-			interval = '15';
-			type = 'temperature';
-		}
-		else{
-			owner = $('#owner').val();
-			interval = $('#interval').val();
-			type = $('#type').val();
-		}
+	function initialDraw(){
+		owner = 'osk3';
+		interval = '15';
 
+		$.ajax({  
+			type : "Get",   
+			url : "get.html",   
+			dataType: "json",
+			data : "owner=" + owner +"&interval=" + interval +"&type=temperature",
+			success : function(response) {  
+				plot(response);
+
+			}, 	
+			error : function(e) {  
+				console.log(e);   
+			}  
+		}); 
+		
+		$.ajax({  
+			type : "Get",   
+			url : "get.html",   
+			dataType: "json",
+			data : "owner=" + owner +"&interval=" + interval +"&type=humidity",
+			success : function(response2) {  
+				updateChart(response2);
+
+			}, 	
+			error : function(e) {  
+				console.log(e);   
+			}  
+		}); 
+		
+		$.ajax({  
+			type : "Get",   
+			url : "get.html",   
+			dataType: "json",
+			data : "owner=" + owner +"&interval=" + interval +"&type=pressure",
+			success : function(response3) {  
+				updateChart(response3);
+			}, 	
+			error : function(e) {  
+				console.log(e);   
+			}  
+		}); 
+	}
+	
+	function draw(){
+		
+		owner = $('#owner').val();
+		interval = $('#interval').val();
+		type = $('#type').val();
+		
 		$.ajax({  
 			type : "Get",   
 			url : "get.html",   
 			dataType: "json",
 			data : "owner=" + owner +"&interval=" + interval +"&type=" + type,
 			success : function(response) {  
-				if(init) {
-					plot(response);
-				}
-				else {
-					updateChart(response);
-				}
+				updateChart(response);	
 			}, 	
 			error : function(e) {  
 				console.log(e);   
@@ -71,7 +105,7 @@
 		<option value="15" selected="selected">15 min.</option>
 		<option value="5">5 min.</option>
 	</select> 
-	<input type="button" class="button button1" value="add" onclick="draw(false)" />  
+	<input type="button" class="button button1" value="add" onclick="draw()" />  
 	<input type="button" class="button button1" value="clear" onclick="clearChart();" />  
     </form>
     
